@@ -1,0 +1,201 @@
+package acavernadodestino1;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class ACavernaDoDestino1 {
+
+    private static Scanner scanner = new Scanner(System.in);
+    private static Random random = new Random();
+    private static boolean saiuDaCaverna = false;
+    private static int vidaJogador = 100;
+    private static String nomeJogador = "Aventureiro"; 
+
+    public static void main(String[] args) {
+        System.out.println("Bem-vindo à Caverna do Destino, bravo aventureiro!");
+        System.out.print("Digite o nome do seu personagem: ");
+        nomeJogador = scanner.nextLine();
+        System.out.println("Voce e " + nomeJogador + ", explorando uma floresta misteriosa quando encontra uma caverna oculta entre as arvores.");
+        System.out.println("Um velho pergaminho que você carrega diz que dentro dela há um artefato magico poderoso, mas tambem perigos desconhecidos.");
+        System.out.println("nao entrar na caverna, a passagem atras de você desmorona, e agora so ha um caminho: seguir em frente.");
+        System.out.println("Depois de caminhar por alguns metros, você encontra duas passagens:");
+        System.out.println("Um corredor iluminado por tochas azuis, com simbolos antigos gravados nas paredes. Parece seguro, mas algo naquelas luzes nao parece natural.");
+        System.out.println("Um tunel escuro e estreito, de onde você ouve um som distante de água corrente. a escuridao é assustadora, mas pode levar a uma saída.");
+
+        escolherCaminho();
+
+        if (saiuDaCaverna) {
+            System.out.println("Voce conseguiu sair da Caverna do Destino, sao e salvo (por enquanto!).");
+        } else if (vidaJogador <= 0) {
+            System.out.println("Voce sucumbiu aos perigos da Caverna do Destino...");
+        } else {
+            System.out.println("na Caverna do Destino provou ser um desafio muito grande para voce hoje...");
+        }
+
+        scanner.close();
+    }
+
+    private static void escolherCaminho() {
+        System.out.println("Escolha o seu caminho, " + nomeJogador + ": (1 para o corredor iluminado, 2 para o tunel escuro)");
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (escolha) {
+            case 1:
+                corredorIluminado();
+                break;
+            case 2:
+                tunelEscuro();
+                break;
+            default:
+                System.out.println("Escolha inválida. A caverna parece confusa e você tropeça.");
+                escolherCaminho();
+        }
+    }
+
+    private static void corredorIluminado() {
+        System.out.println("Você entra no corredor iluminado pelas tochas azuis. Os simbolos antigos nas paredes emanam uma energia estranha.");
+        System.out.println("De repente, as tochas azuis brilham intensamente e você sente o chao sumir sob seus pes...");
+        System.out.println("Voce foi transportado para um labirinto ilusorio!");
+        System.out.println("Paredes mudam de lugar, e o caminho a frente é incerto.");
+        System.out.println("Para sair, você precisa responder a um enigma:");
+        System.out.println("o que tem cidades, mas nao tem casas, florestas, mas nao tem arvores e agua, mas nao tem peixes?");
+        System.out.print("Sua resposta: ");
+        String resposta = scanner.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("um mapa")) {
+            System.out.println("Correto! Uma porta invisível se abre à sua frente, levando para fora do labirinto.");
+            saiuDaCaverna = true;
+        } else {
+            System.out.println("Incorreto! As paredes do labirinto se fecham ao seu redor. Você está preso para sempre...");
+        }
+    }
+
+    private static void tunelEscuro() {
+        System.out.println("Voce se aventura no túnel escuro. A escuridao é quase total, e o som da água corrente ecoa à frente.");
+        System.out.println("Voce segue o som, tropeçando em pedras soltas, ate que a escuridao se dissipa um pouco e você ve um rio subterraneo.");
+        System.out.println("A correnteza parece forte, mas pode ser a saida.");
+        System.out.println("O que você faz, " + nomeJogador + "?");
+        System.out.println("1. Confiar na correnteza e pular no rio.");
+        System.out.println("2. Hesitar e tentar voltar pelo tunel.");
+        int escolha = scanner.nextInt();
+        scanner.nextLine(); 
+
+        switch (escolha) {
+            case 1:
+                System.out.println("Você pula no rio. A água esta gelada, mas a correnteza o leva rapidamente.");
+                System.out.println("Depois de ser levado por um tempo, você ve uma luz no fim do tunel e e jogado para fora da caverna!");
+                saiuDaCaverna = true;
+                break;
+            case 2:
+                System.out.println("Voce decide que a correnteza e muito perigosa e tenta voltar pelo tunel escuro.");
+                encontrarCriatura();
+                break;
+            default:
+                System.out.println("Decisao confusa na escuridao. Você tropeça e cai.");
+                encontrarCriatura();
+                break;
+        }
+    }
+
+    private static void encontrarCriatura() {
+        System.out.println("No caminho de volta, você ouve um som gutural e encontra uma criatura sombria guardando a entrada da caverna!");
+        System.out.println("A criatura, um Troll da Caverna, avança com garras afiadas e olhos vermelhos!");
+        combate(new Criatura("Troll da Caverna", 60, 15));
+    }
+
+    private static void combate(Criatura criatura) {
+        System.out.println("Iniciando combate contra o " + criatura.getNome() + "!");
+
+        while (vidaJogador > 0 && criatura.getVida() > 0) {
+            System.out.println("Sua vida: " + vidaJogador);
+            System.out.println(criatura.getNome() + ": " + criatura.getVida());
+            System.out.println("no que você faz?");
+            System.out.println("1. Atacar");
+            System.out.println("2. Tentar fugir");
+            int escolhaCombate = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (escolhaCombate) {
+                case 1:
+                    atacarCriatura(criatura);
+                    if (criatura.getVida() > 0) {
+                        ataqueCriatura(criatura);
+                    }
+                    break;
+                case 2:
+                    tentarFugir(criatura);
+                    return;
+                default:
+                    System.out.println("Açao inválida!");
+            }
+        }
+
+        if (vidaJogador <= 0) {
+            System.out.println("Voce foi derrotado pelo " + criatura.getNome() + "...");
+        } else {
+            System.out.println("Voce derrotou o " + criatura.getNome() + "! A passagem para fora da caverna parece bloqueada.");
+            System.out.println("Sem outra opçao, você retorna para o rio subterrâneo...");
+            System.out.println("Com mais confiança agora, você pula na correnteza e e levado para fora da caverna em segurança!");
+            saiuDaCaverna = true;
+        }
+    }
+
+    private static void atacarCriatura(Criatura criatura) {
+        int danoJogador = random.nextInt(20) + 10;
+        System.out.println("Você ataca o " + criatura.getNome() + " e causa " + danoJogador + " de dano.");
+        criatura.receberDano(danoJogador);
+    }
+
+    private static void ataqueCriatura(Criatura criatura) {
+        int danoCriatura = random.nextInt(15) + 5; 
+        System.out.println("O " + criatura.getNome() + " ataca você e causa " + danoCriatura + " de dano.");
+        vidaJogador -= danoCriatura;
+        if (vidaJogador < 0) {
+            vidaJogador = 0;
+        }
+    }
+
+    private static void tentarFugir(Criatura criatura) {
+        int chanceFuga = random.nextInt(10);
+        if (chanceFuga >= 3) { 
+            System.out.println("Você consegue escapar do " + criatura.getNome() + " e corre de volta para o rio subterraneo.");
+            System.out.println("Sem outra escolha, você se joga na correnteza e e levado para fora da caverna!");
+            saiuDaCaverna = true;
+        } else {
+            System.out.println("Voce tenta fugir, mas o " + criatura.getNome() + " e muito rapido e bloqueia seu caminho!");
+            ataqueCriatura(criatura);
+        }
+    }
+}
+
+class Criatura {
+    private String nome;
+    private int vida;
+    private int ataque;
+
+    public Criatura(String nome, int vida, int ataque) {
+        this.nome = nome;
+        this.vida = vida;
+        this.ataque = ataque;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public int getAtaque() {
+        return ataque;
+    }
+
+    public void receberDano(int dano) {
+        this.vida -= dano;
+        if (this.vida < 0) {
+            this.vida = 0;
+        }
+    }
+}
